@@ -1,0 +1,2 @@
+# etude_granulo
+Code python appelant deux scripts (python) pour lancer des simulation de DEM avec YADE ainsi qu'un post-traitement de ces simulation. Cette simulation consiste en la création d'un sample de particule jusqu'à attendre un void ratio defini, puis on compresse ce sample et enfin on y applique un essaie Triaxial. L'objectif de ce code est de pouvoir étudier l'influence de la granulométrie, du nbre de particules ainsi que du volume du sample sur sa réponse. 
