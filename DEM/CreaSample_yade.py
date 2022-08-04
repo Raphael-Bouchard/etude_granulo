@@ -447,5 +447,6 @@ O.engines=[
 Le premier argument de O.run() est tres grand
 mais il permet juste d'avoir un exit() en dessous
 """
-O.run(2000000000000,True)
+if OptionFentreYade == True :
+    O.run(200000000,True)
 exit("Tous les samples ont été créé")
