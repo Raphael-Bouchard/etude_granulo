@@ -99,7 +99,7 @@ def LectureFichiersDonnees(chemin, filename) :
             locals (optional) - a mapping object (commonly dictionary)
 
         PS : Il faut savoir que dans ce code et DEM/CreaSample_yade.py, on l'utilise comme telle
-             Mais que dans CompressTriax_yade.py il est dans une boucle et on a du ajouter (2fois)
+             Mais que dans CompressTriax_yade.py il est dans une boucle et on a du ajouter (1 fois)
              l'option globals() et je sias pas pourquoi
              A priori --> l'option local les transforme en variable locals
              A priori --> l'option global les transforme en variable globals
@@ -290,6 +290,7 @@ def InfoSimu() :
     du cube de simulation
     """
     StressTensor = getStress()
+
 
     """
     Formule classique pour obtenir le deviatoric stress : von mises
