@@ -177,6 +177,13 @@ def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Lis
     /!\ le mot pondéré est important car c'est la seule variable commune, les granulométrie n'étant pas exactement les mes dans notre cas actuel
     et se situe dans le dossier sample/date_et_heure/multi_resultat
     """
+
+    """
+    Ici on érifie que l'utiliateur souhaite tarcé les courbes individuelles
+    De plus il est interessant de noter le numero de la figure dans plt.figure( numfig , etc...)
+    On veut que grace à la variable count la figure change de numero a chque itération de la bucle de tracé
+    --> pemet d'avoir une seule courbe par graph
+    """
     if optionTrace == True :
         plt.figure(0+count,figsize=(14, 8), dpi=80)
         plt.plot(abs[:],ordo[:],color='g',label = '$\epsilon_\\nu$ pour un void ratio de '+void_ratio)
@@ -192,6 +199,16 @@ def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Lis
 
     """
     Résultat affiché dans sample/date_et_heure/multi_resultat
+
+    Iic le numéro de la figure reste le meme entre chque boucle, cela permet de tracer plusieurs fois sur une meme figure
+
+    On aurait peut etre pu utiliser les fonctions :
+
+        1) pyplot.close() : ferme la figure et libère toutes les ressources liées à cette figure (à faire après sauvegarde de l'image dans un fichier, pas avant !)
+        2) pyplot.clf() : efface la figure courante.
+        3) pyplot.cla() : efface le graphe courant.
+
+    Mais j'y ai pensé après et là ça marche donc bon a voir pour plus tard
     """
     if optionMultiTrace == True :
         plt.figure(10,figsize=(14, 8), dpi=80)

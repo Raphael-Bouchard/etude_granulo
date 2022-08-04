@@ -62,18 +62,18 @@ Le code est donc stoppé """)
         line_epsilon_zz[j] *= -1
         line_deviatoric_stress[j] *=1./1000.
 
-
-
     """
-    Bon ici on trace les graphs
-    Je dois les ameliorer
+    Récuperations de certaines données à trracer ans le fichier Data_to_plot traité
+    Détail de la function dan sle fichier post_traitement_function.py
     """
-
-    TraceDeviatoricStrain(line_epsilon_zz, line_deviatoric_strain, Liste_void_ratio[i], Liste_chemin_sample[i], chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
-
-    TraceDeviatoricStress(line_epsilon_zz, line_deviatoric_stress, Liste_void_ratio[i], Liste_chemin_sample[i], chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
-
     r_mean, grains, liste_rad_pondere, liste_pourcentage_rad_inf = AnalyseGranulometrique(Liste_chemin_sample[i])
+
+    """
+    Les fonctions ci-dessous servent à tracer différentes courbes
+    Le choix de courbe individuel ou multiple est fait dans les fonctions
+    """
+    TraceDeviatoricStrain(line_epsilon_zz, line_deviatoric_strain, Liste_void_ratio[i], Liste_chemin_sample[i], chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
+    TraceDeviatoricStress(line_epsilon_zz, line_deviatoric_stress, Liste_void_ratio[i], Liste_chemin_sample[i], chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
     TraceCourbeGranulometric( grains['rad'], liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
     TraceCourbeGranulometricPondere(liste_rad_pondere, liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
     TraceCourbeGranulometricEchelleLog(grains['rad'], liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
