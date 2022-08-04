@@ -40,9 +40,8 @@ OptionMultiTrace = True
 
 #sert a savoir si l'on veut que les simu yade soient lancées par soient via la fentre
 # permet de voir l'evolution du sample, mais quand on ets sur de la simulation
-# on peut le laisser sur false
-# True on voit les fentres 
-OptionFentreYade = False
+# on peut le laisser sur false 
+OPtionFentreYade = False
 
 ################################################
 ### Propriété du matériaux utilisé du sample ###
