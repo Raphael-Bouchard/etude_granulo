@@ -166,6 +166,9 @@ input :     Liste   : abs --> abscisses du graph
             bool    : optionMultiTrace --> sert a savoir si l'on veut tracer le courbes multiTrace
 
 output :    fig : les figures auvegardées si il y en a
+
+
+/!\ Lire bien les commentaires de cette fonction, car elles marchent toutes de la même manière, je n'ai donc pas réécris les commentaires. /!\
 """
 def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
 
