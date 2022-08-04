@@ -7,25 +7,32 @@ from post_traitement_function import *
 
 #chemin d'accès aux fichiers résultats
 """
-On récupère les arguments supplémentaires donnés au moment du lancment du
-post traitement dans main.py
+Cette fonction permet de récuéperer toutes les informations utiles
+au post traitement
 """
+OptionTrace, OptionMultiTrace, chemin_multi_trace, Liste_chemin_sample, Liste_nom_fichiers, Liste_void_ratio = MiseEnPlacePostTraitement(sys.argv[1], sys.argv[2])
 
-Liste_chemin_sample, Liste_nom_fichiers, Liste_void_ratio =MiseEnPlacePostTraitement(sys.argv[1])
-chemin_multi_trace = Liste_chemin_sample[0][0:Liste_chemin_sample[0].rfind('/')]
+
 Liste_couleur_trace = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 Liste_forme_trace   =  ['-', '*', '^', 'x', '+', '.']
-count = 0
+
+
 """
 Cette boucle vise a tracer tous les graphs individuels, ie dans chque void ratio
 """
 for i in range(0,len(Liste_chemin_sample)) :
 
+    if OptionTrace == False and OptionMultiTrace == False :
+        exit("""Les options : 'OptionsTrace' et 'OptionMultiTrace'
+Situées dans le fichier input_data.py sont toutes les deux à False
+Il faut en mettre au moins une sur True pour qu'il y ait un post traitement
 
-    if not os.path.exists(Liste_chemin_sample[i]+'/post_traitement') :
-        os.mkdir(Liste_chemin_sample[i]+'/post_traitement')
-    if not os.path.exists(chemin_multi_trace+'/multi_post_traitement') :
-        os.mkdir(chemin_multi_trace+'/multi_post_traitement')
+Le code est donc stoppé """)
+
+    if not os.path.exists(Liste_chemin_sample[i]+'/resultat') :
+        os.mkdir(Liste_chemin_sample[i]+'/resultat')
+    if not os.path.exists(chemin_multi_trace+'/multi_resultat') :
+        os.mkdir(chemin_multi_trace+'/multi_resultat')
 
     """
     info_list_parse() se situe dans le fichier post_traitement_function.py
@@ -45,6 +52,8 @@ for i in range(0,len(Liste_chemin_sample)) :
     Ici on recupere tout et on s'nemerde pas
     """
     line_time , line_iter ,line_epsilon_zz ,line_deviatoric_strain, line_name, line_deviatoric_stress = getLineFromcolumn(matrice)
+
+
     """
     Là on retravaille la forme de données pour avoir un beau graph
     et que ça soit plus silmple pour comparer avec les résultats de Antoine
@@ -60,13 +69,14 @@ for i in range(0,len(Liste_chemin_sample)) :
     Je dois les ameliorer
     """
 
-    TraceDeviatoricStrain(line_epsilon_zz, line_deviatoric_strain, Liste_void_ratio[i], Liste_chemin_sample[i], chemin_multi_trace, Liste_couleur_trace , count, len(Liste_void_ratio))
+    TraceDeviatoricStrain(line_epsilon_zz, line_deviatoric_strain, Liste_void_ratio[i], Liste_chemin_sample[i], chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
 
-    TraceDeviatoricStress(line_epsilon_zz, line_deviatoric_stress, Liste_void_ratio[i], Liste_chemin_sample[i], chemin_multi_trace, Liste_couleur_trace , count, len(Liste_void_ratio))
+    TraceDeviatoricStress(line_epsilon_zz, line_deviatoric_stress, Liste_void_ratio[i], Liste_chemin_sample[i], chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
 
     r_mean, grains, liste_rad_pondere, liste_pourcentage_rad_inf = AnalyseGranulometrique(Liste_chemin_sample[i])
-    TraceCourbeGranulometric( grains['rad'], liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , count, len(Liste_void_ratio))
-    TraceCourbeGranulometricPondere(liste_rad_pondere, liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , count, len(Liste_void_ratio))
-    TraceCourbeGranulometricEchelleLog(grains['rad'], liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , count, len(Liste_void_ratio))
-    TraceCourbeGranulometricPondereEchelleLog(liste_rad_pondere, liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , count, len(Liste_void_ratio))
-    count +=1
+    TraceCourbeGranulometric( grains['rad'], liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
+    TraceCourbeGranulometricPondere(liste_rad_pondere, liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
+    TraceCourbeGranulometricEchelleLog(grains['rad'], liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
+    TraceCourbeGranulometricPondereEchelleLog(liste_rad_pondere, liste_pourcentage_rad_inf,Liste_void_ratio[i], Liste_chemin_sample[i] ,chemin_multi_trace, Liste_couleur_trace , i, len(Liste_void_ratio), OptionTrace, OptionMultiTrace)
+
+print("Tous les post-traitements ont été effectués")

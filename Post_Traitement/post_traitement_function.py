@@ -23,10 +23,12 @@ Cette fonction recupere un fichier de donnée et transforme son contenu en une m
 géante
 input : string
         chemin d'accès au focheir de donnée
-output : Liste[L1[], L2[], etc ... ] --> peut etre vu comme une matrice car chaque liste
+
+output : Liste de liste
+        Liste[L1[], L2[], etc ... ] --> peut etre vu comme une matrice car chaque liste
         contient chque information de la matrice ainsi l'élement
-        matrice[i][j] correspond à Lj[i] --> element i de la liste j
-                                         --> element i de la jeme colonne du fochier de resultat
+        matrice[i][j] correspond à Li[j] --> element j de la liste i
+                                         --> element j de la ieme colonne du fochier de resultat
 """
 def info_list_parse(str_path_client_list):
     with open(str_path_client_list, "r") as file:
@@ -47,6 +49,7 @@ Fonction permettant de selectionner les élements souhaitées dnas la matrice
 et de les stockée comme on le souhaite
 
 input : La matrice (i.e une liste de liste )
+
 Ouput : ce qu'on veut garder ... actuellement j'ai 6 liste que j'utilise apres
         mais ça c'est voué à etre modifié en fonction des besoins
 """
@@ -75,6 +78,11 @@ def getLineFromcolumn(matrice):
 """
 Permet de trsnaformer une ligne d'un fichier en string
 Utile dans le cas de fichier .csv
+
+input : string
+        ligne et u seul string geant
+output : string
+        ligne avec des espace entre chque terme de la ligne
 """
 def lineToStr(line):
     lineStr = " "
@@ -88,12 +96,20 @@ def lineToStr(line):
 Fonctin permettant de prendre en compte tous les arguments onné au post traitement pour
 ensuite mene a bien touts ce que l'ont veut
 """
-def MiseEnPlacePostTraitement(name) :
+def MiseEnPlacePostTraitement(name, path_to_input) :
     Liste_chemin_sample =[]
     Liste_nom_fichiers  =[]
     Liste_void_ratio    =[]
     test=False
 
+    """
+    Ici on recupere les noms des fichiers concatainés, dans la variable name,
+    et on les separes pour remplir la liste 'Liste_nom_fichiers'
+
+    A la fin de cette boucle 'Liste_nom_fichiers' contient le chemin complet jusqu'au
+    fichier
+    i.e : [/absolute/path/to/file/filename1, /absolute/path/to/file/filename2 , /absolute/path/to/file/filename3, etc...]
+    """
     while test == False :
         Liste_nom_fichiers += [name[0:name.find('%')]]
         if name.find('%')+1 == len(name) :
@@ -101,89 +117,139 @@ def MiseEnPlacePostTraitement(name) :
         else :
             name = name[name.find('%')+1:]
 
-
-
+    """
+    Dans cette boucle on va séparer les noms des fichiers de leuur chemin
+    Ainsi que créer une listee des void ratios qui vont être traités
+    """
     for i in range(0,len(Liste_nom_fichiers)) :
+        """
+        On recupere le chemin
+        """
         Liste_chemin_sample +=[Liste_nom_fichiers[i][:Liste_nom_fichiers[i].rfind('/')]]
+        """
+        On garde que le nom du fichier
+        """
         Liste_nom_fichiers[i]= Liste_nom_fichiers[i][Liste_nom_fichiers[i].rfind('/')+1:]
+        """
+        Ici on rercupere le void ratio
+        """
         Liste_void_ratio += [Liste_chemin_sample[i][Liste_chemin_sample[i].rfind('/')+1:].replace('_','.')]
-    return Liste_chemin_sample, Liste_nom_fichiers, Liste_void_ratio
+
+    """
+    Ici on recupere le chemin ou seront tracé les courbes communes
+    i.e sample/date_et_heure
+    """
+    chemin_multi_trace = Liste_chemin_sample[0][0:Liste_chemin_sample[0].rfind('/')]
+
+    """
+    Ici on execute encore une fois input_data.py afin de récupérer les options de tracé
+    """
+    exec(open(path_to_input+'/input_data.py').read(),globals())
+    return OptionTrace, OptionMultiTrace, chemin_multi_trace, Liste_chemin_sample, Liste_nom_fichiers, Liste_void_ratio
 
 
 
 """
 Fonction permttant de tracer automatiquement le deviatoric strain en fonction de epsilon ZZ
+
+toutes les fonctions permettant de tracer les courbes prennent le mêm type d'argument
+dans le même ordre :
+input :     Liste   : abs --> abscisses du graph
+            Liste   : ordo --> ordonnées du graph
+            Liste   : void ratio --> Liste des void ratio --> sert pour les légendes
+            string  : chemin --> chemin jusqu'au lieu de lecture des données (i.e chemin jusqu'aut dossier resultat)
+            string  : chemin_multi_trace --> chemin menat au dossier multi_resultat
+            Liste   : Liste_couleur_trace --> liste contenat 8 couelurs différentes, utile pour le multi trace car sur chque coubre de multi trace, la même couleur representera le me sample
+            integer : count --> compte tour
+            integer : n --> nbre de tour a effctuer --> sert en colaboratio avec count pour savoir quand sauvegarder les figures multi_trace
+            bool    : optionTrace --> sert a savoir si l'on trace les courbve individuelles
+            bool    : optionMultiTrace --> sert a savoir si l'on veut tracer le courbes multiTrace
+
+output :    fig : les figures auvegardées si il y en a
 """
-def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n) :
+def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
 
     """
-    La première figure est celle tracé dans le dossier sampel/date_et_heure/void_ratio/post_traitement
+    La première figure est celle tracé dans le dossier sample/date_et_heure/void_ratio/resultat
+    et ne contient que une courbe, celle du void ratio traité
 
     Tandis que la seconde est celle ou sont tracé toutes les courbes pour une meme granulométire PONDÉRÉE
     /!\ le mot pondéré est important car c'est la seule variable commune, les granulométrie n'étant pas exactement les mes dans notre cas actuel
+    et se situe dans le dossier sample/date_et_heure/multi_resultat
     """
-    plt.figure(0+count,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color='g',label = '$\epsilon_\\nu$ pour un void ratio de '+void_ratio)
-    plt.grid(True)
-    plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
-    plt.ylabel("$\epsilon_\\nu$", fontsize = 18)
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.xlim(0,max(abs)*1.1)
-    plt.title('Evolution of the deviatric strain as a function of the z-strain', fontsize =18)
-    plt.savefig(chemin+'/post_traitement/'+'dev_strain.png')
+    if optionTrace == True :
+        plt.figure(0+count,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color='g',label = '$\epsilon_\\nu$ pour un void ratio de '+void_ratio)
+        plt.grid(True)
+        plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
+        plt.ylabel("$\epsilon_\\nu$", fontsize = 18)
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.xlim(0,max(abs)*1.1)
+        plt.title('Evolution of the deviatric strain as a function of the z-strain', fontsize =18)
+        plt.savefig(chemin+'/resultat/'+'dev_strain.png')
 
     """
-    Résultat affiché dans sample/date_et_heure/multi_post_traitement
+    Résultat affiché dans sample/date_et_heure/multi_resultat
     """
-    plt.figure(10,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label = '$\epsilon_\\nu$ pour un void ratio de '+void_ratio)
-    plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
-    plt.ylabel("$\epsilon_\\nu$", fontsize = 18)
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.xlim(0,max(abs)*1.1)
-    plt.title('Evolution of the deviatric strain as a function of the z-strain', fontsize =18)
-    plt.grid(True)
-    if count == n-1 :
-        plt.savefig(chemin_multi_trace+'/multi_post_traitement/'+'multi_dev_strain.png')
+    if optionMultiTrace == True :
+        plt.figure(10,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label = '$\epsilon_\\nu$ pour un void ratio de '+void_ratio)
+        plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
+        plt.ylabel("$\epsilon_\\nu$", fontsize = 18)
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.xlim(0,max(abs)*1.1)
+        plt.title('Evolution of the deviatric strain as a function of the z-strain', fontsize =18)
+        plt.grid(True)
+        if count == n-1 :
+            plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_dev_strain.png')
 
 
 """
 Fonction permttant de tracer automatiquement le deviatoric stress en fonction de epsilon ZZ
 """
-def TraceDeviatoricStress(abs, ordo, void_ratio,chemin, chemin_multi_trace, Liste_couleur_trace, count, n) :
-
-
-    plt.figure(20+count,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='q pour un void ratio de '+ void_ratio)
-    plt.grid(True)
-    plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
-    plt.ylabel("q (kPa)", fontsize = 18)
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.xlim(0,max(abs)*1.1)
-    plt.title('Evolution of the deviatric stress as a function of the z-strain', fontsize =18)
-    plt.savefig(chemin+'/post_traitement/'+'dev_stress.png')
+def TraceDeviatoricStress(abs, ordo, void_ratio,chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
 
     """
-    Résultat affiché dans sample/date_et_heure/multi_post_traitement
+    La première figure est celle tracé dans le dossier sample/date_et_heure/void_ratio/resultat
+    et ne contient que une courbe, celle du void ratio traité
+
+    Tandis que la seconde est celle ou sont tracé toutes les courbes pour une meme granulométire PONDÉRÉE
+    /!\ le mot pondéré est important car c'est la seule variable commune, les granulométrie n'étant pas exactement les mes dans notre cas actuel
+    et se situe dans le dossier sample/date_et_heure/multi_resultat
     """
-    plt.figure(30,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='q pour un void ratio de '+ void_ratio)
-    plt.grid(True)
-    plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
-    plt.ylabel("q (kPa)", fontsize = 18)
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.xlim(0,max(abs)*1.1)
-    plt.title('Evolution of the deviatric stress as a function of the z-strain', fontsize =18)
-    if count == n-1 :
-        plt.savefig(chemin_multi_trace+'/multi_post_traitement/'+'multi_dev_stress.png')
+    if optionTrace == True :
+        plt.figure(20+count,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='q pour un void ratio de '+ void_ratio)
+        plt.grid(True)
+        plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
+        plt.ylabel("q (kPa)", fontsize = 18)
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.xlim(0,max(abs)*1.1)
+        plt.title('Evolution of the deviatric stress as a function of the z-strain', fontsize =18)
+        plt.savefig(chemin+'/resultat/'+'dev_stress.png')
+
+    """
+    Résultat affiché dans sample/date_et_heure/multi_resultat
+    """
+    if optionMultiTrace == True :
+        plt.figure(30,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='q pour un void ratio de '+ void_ratio)
+        plt.grid(True)
+        plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
+        plt.ylabel("q (kPa)", fontsize = 18)
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.xlim(0,max(abs)*1.1)
+        plt.title('Evolution of the deviatric stress as a function of the z-strain', fontsize =18)
+        if count == n-1 :
+            plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_dev_stress.png')
 
 
 
@@ -191,6 +257,10 @@ def TraceDeviatoricStress(abs, ordo, void_ratio,chemin, chemin_multi_trace, List
 Cette focntion permet simplement de recuperer la liste des rayons des particules
 triées, une autre ponérée par l rayon minimim, du coup le rayon minimum
 etc... va servir pour le tracer de l'ensemble des courbes granulométiques possibles
+
+input : string : chemin --> chemin menant au fichier de resultat à lire (i;e sample/date_et_heure/void_ratio)
+
+output :
 """
 def AnalyseGranulometrique(chemin) :
     """
@@ -216,127 +286,131 @@ def AnalyseGranulometrique(chemin) :
     for i in range(0,len(grains['rad'])) :
         liste_ordon.append(i*100/len(grains['rad']))
         sum_rayon +=grains['rad'][i]
-    r_mean    = sum_rayon/len(grains['rad'])
+    r_mean = sum_rayon/len(grains['rad'])
 
     for i in range(0,len(grains['rad'])) :
         liste_abs.append(grains['rad'][i]/r_mean)
 
     return r_mean, grains, liste_abs, liste_ordon
 
-def TraceCourbeGranulometric(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n) :
+def TraceCourbeGranulometric(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
 
-    plt.figure(40+count,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
-    plt.grid(True)
-    plt.xlabel("r(m)", fontsize = 18)
-    plt.ylabel("%", fontsize = 18)
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.ylim(0,100)
-    plt.title('Courbe granulometrique', fontsize =18)
-    plt.savefig(chemin+'/post_traitement/'+'granulo.png')
+    if optionTrace == True :
+        plt.figure(40+count,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
+        plt.grid(True)
+        plt.xlabel("r(m)", fontsize = 18)
+        plt.ylabel("%", fontsize = 18)
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.ylim(0,100)
+        plt.title('Courbe granulometrique', fontsize =18)
+        plt.savefig(chemin+'/resultat/'+'granulo.png')
 
-    plt.figure(50,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
-    plt.grid(True)
-    plt.xlabel("r(m)", fontsize = 18)
-    plt.ylabel("%", fontsize = 18)
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.ylim(0,100)
-    plt.title('Courbe granulometrique', fontsize =18)
-    if count == n-1 :
-        plt.savefig(chemin_multi_trace+'/multi_post_traitement/'+'multi_granulo.png')
+    if optionMultiTrace == True :
+        plt.figure(50,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
+        plt.grid(True)
+        plt.xlabel("r(m)", fontsize = 18)
+        plt.ylabel("%", fontsize = 18)
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.ylim(0,100)
+        plt.title('Courbe granulometrique', fontsize =18)
+        if count == n-1 :
+            plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_granulo.png')
 
-def TraceCourbeGranulometricPondere(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n) :
+def TraceCourbeGranulometricPondere(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
+    if optionTrace == True :
+        plt.figure(60+count,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+void_ratio)
+        plt.grid(True)
+        plt.xlabel("$\dfrac{r}{r_{mean}}$", fontsize = 18)
+        plt.ylabel("%", fontsize = 18)
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.ylim(0,100)
+        plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
+        plt.savefig(chemin+'/resultat/'+'granulo_pondere_r_mean.png')
 
-    plt.figure(60+count,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+void_ratio)
-    plt.grid(True)
-    plt.xlabel("$\dfrac{r}{r_{mean}}$", fontsize = 18)
-    plt.ylabel("%", fontsize = 18)
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.ylim(0,100)
-    plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
-    plt.savefig(chemin+'/post_traitement/'+'granulo_pondere_r_mean.png')
+    if optionMultiTrace == True :
+        plt.figure(70,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+void_ratio)
+        plt.grid(True)
+        plt.xlabel("$\dfrac{r}{r_{mean}}$", fontsize = 18)
+        plt.ylabel("%", fontsize = 18)
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.ylim(0,100)
+        plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
+        if count == n-1 :
+            plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_granulo_pondere_r_mean.png')
 
+def TraceCourbeGranulometricEchelleLog(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
 
-    plt.figure(70,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+void_ratio)
-    plt.grid(True)
-    plt.xlabel("$\dfrac{r}{r_{mean}}$", fontsize = 18)
-    plt.ylabel("%", fontsize = 18)
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.ylim(0,100)
-    plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
-    if count == n-1 :
-        plt.savefig(chemin_multi_trace+'/multi_post_traitement/'+'multi_granulo_pondere_r_mean.png')
+    if optionTrace == True :
+        plt.figure(80+count,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
+        plt.grid(True,which="both")
+        plt.xlabel("r(m)", fontsize = 18)
+        plt.ylabel("%", fontsize = 18)
+        plt.xscale("log")
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.xlim(min(abs)/10,max(abs)*10)
+        plt.ylim(0,100)
+        plt.title('Courbe granulometrique', fontsize =18)
+        plt.savefig(chemin+'/resultat/'+'granulo_echelle_log.png')
 
-def TraceCourbeGranulometricEchelleLog(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n) :
+    if optionMultiTrace == True :
+        plt.figure(90,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
+        plt.grid(True,which="both")
+        plt.xlabel("r(m)", fontsize = 18)
+        plt.ylabel("%", fontsize = 18)
+        plt.xscale("log")
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.legend(prop={'size':14})
+        plt.xlim(min(abs)/10,max(abs)*10)
+        plt.ylim(0,100)
+        plt.title('Courbe granulometrique', fontsize =18)
+        if count == n-1 :
+            plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_granulo_echelle_log.png')
 
-    plt.figure(80+count,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
-    plt.grid(True)
-    plt.xlabel("r(m)", fontsize = 18)
-    plt.ylabel("%", fontsize = 18)
-    plt.xscale("log")
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.xlim(min(abs)/10,max(abs)*10)
-    plt.ylim(0,100)
-    plt.title('Courbe granulometrique', fontsize =18)
-    plt.savefig(chemin+'/post_traitement/'+'granulo_echelle_log.png')
+def TraceCourbeGranulometricPondereEchelleLog(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
+    if optionTrace == True :
+        plt.figure(100+count,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+void_ratio)
+        plt.grid(True,which="both")
+        plt.xlabel("$\dfrac{r}{r_{mean}}$", fontsize = 18)
+        plt.xscale('log')
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.ylabel("%", fontsize = 18)
+        plt.legend(prop={'size':14})
+        plt.xlim(min(abs)/10,max(abs)*10)
+        plt.ylim(0,100)
+        plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
+        plt.savefig(chemin+'/resultat/'+'granulo_pondere_r_mean_echelle_log.png')
 
-
-    plt.figure(90,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
-    plt.grid(True)
-    plt.xlabel("r(m)", fontsize = 18)
-    plt.ylabel("%", fontsize = 18)
-    plt.xscale("log")
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.legend(prop={'size':14})
-    plt.xlim(min(abs)/10,max(abs)*10)
-    plt.ylim(0,100)
-    plt.title('Courbe granulometrique', fontsize =18)
-    if count == n-1 :
-        plt.savefig(chemin_multi_trace+'/multi_post_traitement/'+'multi_granulo_echelle_log.png')
-
-def TraceCourbeGranulometricPondereEchelleLog(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n) :
-
-    plt.figure(100+count,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+void_ratio)
-    plt.grid(True)
-    plt.xlabel("$\dfrac{r}{r_{mean}}$", fontsize = 18)
-    plt.xscale('log')
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.ylabel("%", fontsize = 18)
-    plt.legend(prop={'size':14})
-    plt.xlim(min(abs)/10,max(abs)*10)
-    plt.ylim(0,100)
-    plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
-    plt.savefig(chemin+'/post_traitement/'+'granulo_pondere_r_mean_echelle_log.png')
-
-    plt.figure(100+count,figsize=(14, 8), dpi=80)
-    plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+void_ratio)
-    plt.grid(True)
-    plt.xlabel("$\dfrac{r}{r_{mean}}$", fontsize = 18)
-    plt.xscale('log')
-    plt.gca().xaxis.set_tick_params(labelsize = 12)
-    plt.gca().yaxis.set_tick_params(labelsize = 12)
-    plt.ylabel("%", fontsize = 18)
-    plt.legend(prop={'size':14})
-    plt.xlim(min(abs)/10,max(abs)*10)
-    plt.ylim(0,100)
-    plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
-    if count == n-1 :
-        plt.savefig(chemin_multi_trace+'/multi_post_traitement/'+'multi_granulo_pondere_r_mean_echelle_log.png')
+    if optionMultiTrace == True :
+        plt.figure(110,figsize=(14, 8), dpi=80)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+void_ratio)
+        plt.grid(True,which="both")
+        plt.xlabel("$\dfrac{r}{r_{mean}}$", fontsize = 18)
+        plt.xscale('log')
+        plt.gca().xaxis.set_tick_params(labelsize = 12)
+        plt.gca().yaxis.set_tick_params(labelsize = 12)
+        plt.ylabel("%", fontsize = 18)
+        plt.legend(prop={'size':14})
+        plt.xlim(min(abs)/10,max(abs)*10)
+        plt.ylim(0,100)
+        plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
+        if count == n-1 :
+            plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_granulo_pondere_r_mean_echelle_log.png')

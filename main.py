@@ -185,10 +185,9 @@ if dictionnaire_simu['post_traitement'] == True :
             Ici on juxtapose tous les chemins et noms de ficheir a traiter avec le symbole '%'
             Puis dans le fichier de post traitement on separe le tout pour récupérer
             nos listes de dossier et de fichiers
-            --> permet d'appeler le code de  post-traitement une seule fois 
+            --> permet d'appeler le code de  post-traitement une seule fois
 
             la fonction os.getcwd() donne le chemin absolu jusqu'au repertoire courant
             """
             nom_couple_tous_les_fichiers +=  os.getcwd()+'/'+liste_chemin_sample[i]+'/'+Liste_des_fichiers_pour_post_traitement[i]+'%'
-        os.system('python3 Post_Traitement/posttraitement.py ' + nom_couple_tous_les_fichiers)
-        print("Tous les post-traitements ont été effectués")
+        os.system('python3 Post_Traitement/posttraitement.py ' + nom_couple_tous_les_fichiers +" " + os.getcwd())

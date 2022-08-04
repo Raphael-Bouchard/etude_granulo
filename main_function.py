@@ -317,6 +317,7 @@ def SelectionFichieraTraiter(dictionnaire_extension,chemin_to_sample,option) :
         LimitCount = 1
 
 
+
     for key in liste_extension_a_tester :
 
         # boucle au cas ou il y a plusieurs de fichier de résultats possible
@@ -411,6 +412,16 @@ def MiseEnPlaceSimu(initial_chemin, option):
     # on recupere les chemin menant au fichier des samples
     # recupere automatiquement le fichier le plus recent
     liste_chemin_sample = RecupPathToSample(initial_chemin)
+
+    """
+    Dans le cadre où nous referions un post traitement, il y aura un dossier
+    sample/date_et_heure/multi_resultat et pour éviter un affichage inutile qui arrivera plus tard
+    on supprime de la liste les nom finissant par 'multi_resultat' et 'resultat'
+    """
+    for i in range(0, len(liste_chemin_sample)) :
+        if liste_chemin_sample[i][liste_chemin_sample[i].rfind('/')+1:] == 'multi_resultat' or liste_chemin_sample[i][liste_chemin_sample[i].rfind('/')+1:] == 'resultat' :
+            del liste_chemin_sample[i]
+
 
     # cas ou il n'y a pas fichier de resultats
     # i.e les chemisn sample/date_et_heure/void_ratio n'existent pas

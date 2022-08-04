@@ -26,6 +26,17 @@ nous ne créerons pas de nouveau dossier car ça sert a rien
 creation_chemin = False
 # chemin où seront ecrit les résultats de la creation des samples
 chemin          = 'sample'
+"""
+Les options ci-dessous servent à gérer le sgraphs que l'on souhiate obtenir
+Dans un soucis de limiter les donner, il vaut mieux mettre a True uniquement
+OptionMultiTrace
+"""
+#Cette option permet de savoir si l'on veut les courbes individuelles
+# i.e c'est à dire pour chque void ratio, les courbes associés
+OptionTrace = True
+# ici on choisit si l'on veut tracé les courbes sur un même graph
+# pour les courbes issu de la mêmem simulation
+OptionMultiTrace = True 
 
 
 
