@@ -192,7 +192,7 @@ def saveSamplePy(chemin,meanStress, void_ratio,TargetVoidRatio):
 
     print("************************")
     print("iteration        : ", O.iter)
-    print('unbalanced force : ',unb)
+    print('unbalanced force : ',unbalancedForce())
     print('mean stress      : ',meanStress)
     print("porosity         : ", porosity())
     print("Void ratio       : ", void_ratio)
@@ -274,6 +274,8 @@ def checkConvergence(TargetVoidRatio, chemin):
                     TargetVoidRatio = ListTargetVoidRatio[i+1]
                     print("Le nouveau void ratio est", TargetVoidRatio)
                     break
+
+    return TargetVoidRatio
 
 
 
@@ -440,7 +442,7 @@ O.engines=[
         triax,
         NewtonIntegrator(damping=damp,label='newton'),
         #PyRunner(command='test()', iterPeriod = 50),
-        PyRunner(command='checkConvergence(TargetVoidRatio, chemin)',iterPeriod=2500,label='checker', dead=False)
+        PyRunner(command='TargetVoidRatio = checkConvergence(TargetVoidRatio, chemin)',iterPeriod=2500,label='checker', dead=False)
         ]
 
 """

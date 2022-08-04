@@ -41,7 +41,7 @@ OptionMultiTrace = True
 #sert a savoir si l'on veut que les simu yade soient lancées par soient via la fentre
 # permet de voir l'evolution du sample, mais quand on ets sur de la simulation
 # on peut le laisser sur false
-# True on voit les fentres 
+# True on voit les fentres
 OptionFentreYade = False
 
 ################################################
@@ -97,4 +97,4 @@ Strain_Z_Goal       = 0.2
 # une boucle dans le programme supprimera de la liste tous les void ratio inferrieu à 0.6
 # si cette boucle devient chiante et qu'il faut l'enelver cela ce passe dans ver;py à la
 # fonction GestionInputDonnes()
-ListTargetVoidRatio   = [0.8,0.7,0.615]
+ListTargetVoidRatio   = [4.0,3,0.8,0.7,0.615]
