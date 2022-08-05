@@ -13,7 +13,7 @@ au post traitement
 OptionTrace, OptionMultiTrace, chemin_multi_trace, Liste_chemin_sample, Liste_nom_fichiers, Liste_void_ratio = MiseEnPlacePostTraitement(sys.argv[1], sys.argv[2])
 
 
-Liste_couleur_trace = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+Liste_couleur_trace = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
 Liste_forme_trace   =  ['-', '*', '^', 'x', '+', '.']
 
 

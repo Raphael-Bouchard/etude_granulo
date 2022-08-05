@@ -5,11 +5,11 @@
 # grace a ce dictionnaire on va chosiir quelles simulations lancées
 dictionnaire_simu={
 # permet de crÉer les sample avec les informations données ci-avant
-'creation_sample' : True,
+'creation_sample' : False,
 # permet de savoir si l'on veut procéder à l'essaie trriaxial une fois que l'ensemble des sample aura ete créé
 # faire attention à ca, si on met un void ratio impossible à atteindre dans la liste,
 # le code de creation de sample tournera à l'infini
-'essaie_triaxial' : True,
+'essaie_triaxial' : False,
 # encore une fois permet de savoir si l'onva lancer le post_traitement en automatique par la suite
 'post_traitement' : True
 }
@@ -97,4 +97,4 @@ Strain_Z_Goal       = 0.2
 # une boucle dans le programme supprimera de la liste tous les void ratio inferrieu à 0.6
 # si cette boucle devient chiante et qu'il faut l'enelver cela ce passe dans ver;py à la
 # fonction GestionInputDonnes()
-ListTargetVoidRatio   = [4.0,3,0.8,0.7,0.615]
+ListTargetVoidRatio   = [0.8,0.7,0.615]

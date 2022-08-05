@@ -136,7 +136,7 @@ def LectureFichiersDonnees(chemin, filename) :
 
 """
 Cette fonction permet de récupérer de nombreuses informations sur l'état de la simulation
-et de les affihcer à l'écran
+et de les afficher à l'écran
 """
 def infoInitialState():
     nb, Min_r, Max_r, Min_X, Max_X, Min_Y, Max_Y, Min_Z, Max_Z, Volume= infoPositions()
