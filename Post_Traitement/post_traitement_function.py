@@ -189,7 +189,7 @@ def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Lis
     """
     if optionTrace == True :
         plt.figure(0+count,figsize=(14, 8), dpi=80)
-        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label = '$\epsilon_\\nu$ pour un void ratio de '+void_ratio)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label = 'void ratio de '+void_ratio)
         plt.grid(True)
         plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
         plt.ylabel("$\epsilon_\\nu$", fontsize = 18)
@@ -219,7 +219,7 @@ def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Lis
     """
     if optionMultiTrace == True :
         plt.figure(10,figsize=(14, 8), dpi=80)
-        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label = '$\epsilon_\\nu$ pour un void ratio de '+void_ratio)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label = 'void ratio de '+void_ratio)
         plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
         plt.ylabel("$\epsilon_\\nu$", fontsize = 18)
         plt.gca().xaxis.set_tick_params(labelsize = 12)
@@ -248,7 +248,7 @@ def TraceDeviatoricStress(abs, ordo, void_ratio,chemin, chemin_multi_trace, List
     """
     if optionTrace == True :
         plt.figure(20+count,figsize=(14, 8), dpi=80)
-        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='q pour un void ratio de '+ void_ratio)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
         plt.grid(True)
         plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
         plt.ylabel("q (kPa)", fontsize = 18)
@@ -265,7 +265,7 @@ def TraceDeviatoricStress(abs, ordo, void_ratio,chemin, chemin_multi_trace, List
     """
     if optionMultiTrace == True :
         plt.figure(30,figsize=(14, 8), dpi=80)
-        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='q pour un void ratio de '+ void_ratio)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label ='void ratio de '+ void_ratio)
         plt.grid(True)
         plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
         plt.ylabel("q (kPa)", fontsize = 18)

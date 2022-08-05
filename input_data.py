@@ -9,7 +9,7 @@ dictionnaire_simu={
 # permet de savoir si l'on veut procéder à l'essaie trriaxial une fois que l'ensemble des sample aura ete créé
 # faire attention à ca, si on met un void ratio impossible à atteindre dans la liste,
 # le code de creation de sample tournera à l'infini
-'essaie_triaxial' : False,
+'essaie_triaxial' : True,
 # encore une fois permet de savoir si l'onva lancer le post_traitement en automatique par la suite
 'post_traitement' : True
 }
@@ -89,7 +89,7 @@ damp                      = 0.8
 #######################################################################################
 sigma1              = -100*10**3
 # vitesse de deplacement des murs dans certains cas : ici s'utilise dans CompressTriax_yade.py
-strainSpeed         = -100
+strainSpeed         = -0.01
 # objectif de compression triaxial
 Strain_Z_Goal       = 0.2
 
