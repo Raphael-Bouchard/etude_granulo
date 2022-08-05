@@ -452,7 +452,8 @@ Le code va donc être stoppé""")
             Liste_des_fichiers_a_traiter +=[selected_file]
         else :
             liste_des_indices_a_supprimer.append(i)
-    # on supprime de liste_dmin_sample tous les odssier ne contenat pas de fichier de resultats 
+
+    # on supprime de liste_dmin_sample tous les odssier ne contenant pas de fichier de resultats 
     for i in range(0,len(liste_des_indices_a_supprimer)):
         del liste_chemin_sample[liste_des_indices_a_supprimer[i]]
 
