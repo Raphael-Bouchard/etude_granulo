@@ -443,12 +443,18 @@ Le code va donc être stoppé""")
             exit("")
 
     Liste_des_fichiers_a_traiter=[]
+    # car les chemin ne contiendront pas de rficheir de resultats
+    liste_des_indices_a_supprimer=[]
     for i in range(0,len(liste_chemin_sample)):
         dictionnaire_extension = RecupDictExtensionListeFichier(liste_chemin_sample[i])
         selected_file = SelectionFichieraTraiter(dictionnaire_extension,liste_chemin_sample[i],option)
         if selected_file != '' :
             Liste_des_fichiers_a_traiter +=[selected_file]
-
+        else :
+            liste_des_indices_a_supprimer.append(i)
+    # on supprime de liste_dmin_sample tous les odssier ne contenat pas de fichier de resultats 
+    for i in range(0,len(liste_des_indices_a_supprimer)):
+        del liste_chemin_sample[liste_des_indices_a_supprimer[i]]
 
 
     # si il ya des dossiers de résultats (avec les fichiers dedans)
