@@ -189,7 +189,7 @@ def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Lis
     """
     if optionTrace == True :
         plt.figure(0+count,figsize=(14, 8), dpi=80)
-        plt.plot(abs[:],ordo[:],color='g',label = '$\epsilon_\\nu$ pour un void ratio de '+void_ratio)
+        plt.plot(abs[:],ordo[:],color=Liste_couleur_trace[count],label = '$\epsilon_\\nu$ pour un void ratio de '+void_ratio)
         plt.grid(True)
         plt.xlabel("$\epsilon_{zz}$", fontsize = 18)
         plt.ylabel("$\epsilon_\\nu$", fontsize = 18)
@@ -199,6 +199,7 @@ def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Lis
         plt.xlim(0,max(abs)*1.1)
         plt.title('Evolution of the deviatric strain as a function of the z-strain', fontsize =18)
         plt.savefig(chemin+'/resultat/'+'dev_strain.png')
+        plt.close(0+count)
 
     """
     Résultat affiché dans sample/date_et_heure/multi_resultat
@@ -212,6 +213,9 @@ def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Lis
         3) pyplot.cla() : efface le graphe courant.
 
     Mais j'y ai pensé après et là ça marche donc bon a voir pour plus tard
+
+
+    NB : j'ai ajouté les plt.close() au final car ca evite l'affichqge de warning
     """
     if optionMultiTrace == True :
         plt.figure(10,figsize=(14, 8), dpi=80)
@@ -226,6 +230,7 @@ def TraceDeviatoricStrain(abs, ordo, void_ratio, chemin, chemin_multi_trace, Lis
         plt.grid(True)
         if count == n-1 :
             plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_dev_strain.png')
+            plt.close(10)
 
 
 """
@@ -253,6 +258,7 @@ def TraceDeviatoricStress(abs, ordo, void_ratio,chemin, chemin_multi_trace, List
         plt.xlim(0,max(abs)*1.1)
         plt.title('Evolution of the deviatric stress as a function of the z-strain', fontsize =18)
         plt.savefig(chemin+'/resultat/'+'dev_stress.png')
+        plt.close(20+count)
 
     """
     Résultat affiché dans sample/date_et_heure/multi_resultat
@@ -270,6 +276,7 @@ def TraceDeviatoricStress(abs, ordo, void_ratio,chemin, chemin_multi_trace, List
         plt.title('Evolution of the deviatric stress as a function of the z-strain', fontsize =18)
         if count == n-1 :
             plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_dev_stress.png')
+            plt.close(30)
 
 
 
@@ -327,6 +334,7 @@ def TraceCourbeGranulometric(abs, ordo, void_ratio, chemin, chemin_multi_trace, 
         plt.ylim(0,100)
         plt.title('Courbe granulometrique', fontsize =18)
         plt.savefig(chemin+'/resultat/'+'granulo.png')
+        plt.close(40+count)
 
     if optionMultiTrace == True :
         plt.figure(50,figsize=(14, 8), dpi=80)
@@ -341,6 +349,7 @@ def TraceCourbeGranulometric(abs, ordo, void_ratio, chemin, chemin_multi_trace, 
         plt.title('Courbe granulometrique', fontsize =18)
         if count == n-1 :
             plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_granulo.png')
+            plt.close(50)
 
 def TraceCourbeGranulometricPondere(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
     if optionTrace == True :
@@ -355,6 +364,7 @@ def TraceCourbeGranulometricPondere(abs, ordo, void_ratio, chemin, chemin_multi_
         plt.ylim(0,100)
         plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
         plt.savefig(chemin+'/resultat/'+'granulo_pondere_r_mean.png')
+        plt.close(60+count)
 
     if optionMultiTrace == True :
         plt.figure(70,figsize=(14, 8), dpi=80)
@@ -369,6 +379,7 @@ def TraceCourbeGranulometricPondere(abs, ordo, void_ratio, chemin, chemin_multi_
         plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
         if count == n-1 :
             plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_granulo_pondere_r_mean.png')
+            plt.close(70)
 
 def TraceCourbeGranulometricEchelleLog(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
 
@@ -386,6 +397,7 @@ def TraceCourbeGranulometricEchelleLog(abs, ordo, void_ratio, chemin, chemin_mul
         plt.ylim(0,100)
         plt.title('Courbe granulometrique', fontsize =18)
         plt.savefig(chemin+'/resultat/'+'granulo_echelle_log.png')
+        plt.close(80+count)
 
     if optionMultiTrace == True :
         plt.figure(90,figsize=(14, 8), dpi=80)
@@ -402,6 +414,7 @@ def TraceCourbeGranulometricEchelleLog(abs, ordo, void_ratio, chemin, chemin_mul
         plt.title('Courbe granulometrique', fontsize =18)
         if count == n-1 :
             plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_granulo_echelle_log.png')
+            plt.close(90)
 
 def TraceCourbeGranulometricPondereEchelleLog(abs, ordo, void_ratio, chemin, chemin_multi_trace, Liste_couleur_trace, count, n, optionTrace, optionMultiTrace) :
     if optionTrace == True :
@@ -418,6 +431,7 @@ def TraceCourbeGranulometricPondereEchelleLog(abs, ordo, void_ratio, chemin, che
         plt.ylim(0,100)
         plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
         plt.savefig(chemin+'/resultat/'+'granulo_pondere_r_mean_echelle_log.png')
+        plt.close(100+count)
 
     if optionMultiTrace == True :
         plt.figure(110,figsize=(14, 8), dpi=80)
@@ -434,3 +448,4 @@ def TraceCourbeGranulometricPondereEchelleLog(abs, ordo, void_ratio, chemin, che
         plt.title('Courbe granulometrique pondérée par $r_{mean}$', fontsize =18)
         if count == n-1 :
             plt.savefig(chemin_multi_trace+'/multi_resultat/'+'multi_granulo_pondere_r_mean_echelle_log.png')
+            plt.close(110)
