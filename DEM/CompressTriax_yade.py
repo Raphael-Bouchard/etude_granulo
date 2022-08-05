@@ -442,7 +442,6 @@ young=356e6
 poisson=0.42
 frictAngle=30
 density=3000
-damp=0.8
 wall_ids=[]
 Strain_Z_Goal = 0.2
 
@@ -543,7 +542,7 @@ O.engines=[
 	# PyRunner(command='Save_Stresses()',iterPeriod= 1000, label = 'Save_Stresses'),#int(sys.argv[1]), label = 'Save_Stresses'),
 	# PyRunner(command='Check_Positions()',iterPeriod = 1000, label = 'Positions'),#int(sys.argv[1]), label = 'Positions'),
 	# Apply gravity force to particles. damping: numerical dissipation of energy.
-	NewtonIntegrator(gravity=(0.0,0.0,9.81),damping=0.2)
+	NewtonIntegrator(gravity=(0.0,0.0,9.81),damping=0.05)
 		  ]
 
 

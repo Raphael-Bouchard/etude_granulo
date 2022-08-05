@@ -9,7 +9,7 @@ dictionnaire_simu={
 # permet de savoir si l'on veut procéder à l'essaie trriaxial une fois que l'ensemble des sample aura ete créé
 # faire attention à ca, si on met un void ratio impossible à atteindre dans la liste,
 # le code de creation de sample tournera à l'infini
-'essaie_triaxial' : True,
+'essaie_triaxial' : False,
 # encore une fois permet de savoir si l'onva lancer le post_traitement en automatique par la suite
 'post_traitement' : True
 }
@@ -79,7 +79,6 @@ Input_InternalCompaction  = True
 #Permet de gerer les stressMask --> TriaxialStressController() fonctionne en colab avec
 # sigma0, strainSpeed et internal compaction
 Input_StressMask          = 7
-damp                      = 0.8
 
 
 #######################################################################################

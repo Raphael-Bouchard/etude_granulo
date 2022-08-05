@@ -310,7 +310,6 @@ sigma0 = -20*10**3
 Input_InternalCompaction = True
 Input_StressMask = 7
 strainSpeed = 0
-damp = 0.8
 # liste des obtectifs des void ratios
 # une boucle dans le programme supprimera de la liste tous les void ratio inferrieu à 0.6
 ListTargetVoidRatio   = [1.5,1.0,0.7,0.8,0.9,0.4,0.6,0.5]
@@ -440,7 +439,7 @@ O.engines=[
 #        GlobalStiffnessTimeStepper(active=1,timeStepUpdateInterval=100,
 #                                   timestepSafetyCoefficient=0.8),
         triax,
-        NewtonIntegrator(damping=damp,label='newton'),
+        NewtonIntegrator(damping=0.05,label='newton'),
         #PyRunner(command='test()', iterPeriod = 50),
         PyRunner(command='TargetVoidRatio = checkConvergence(TargetVoidRatio, chemin)',iterPeriod=2500,label='checker', dead=False)
         ]
